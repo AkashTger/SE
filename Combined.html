@@ -7,6 +7,53 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script>
+  function handleTrainSearch(event) {
+    event.preventDefault(); // Prevent the form from refreshing the page
+
+    // Retrieve input values
+    const sourceStation = document.getElementById('sourceStation').value.trim().toLowerCase();
+    const destinationStation = document.getElementById('destinationStation').value.trim().toLowerCase();
+    const travelDate = document.getElementById('travelDate').value;
+
+    // Sample data (replace with real API data if available)
+    const trainData = [
+        { number: "12345", name: "Express Train", source: "City A", destination: "City B", date: "2024-11-15", time: "10:00 AM" },
+        { number: "67890", name: "Fast Line", source: "City A", destination: "City C", date: "2024-11-15", time: "12:00 PM" },
+        { number: "24680", name: "Night Rider", source: "City D", destination: "City B", date: "2024-11-16", time: "9:00 PM" },
+        // Add more sample trains as needed
+    ];
+
+    // Filter data based on input values
+    const results = trainData.filter(train => 
+        train.source.toLowerCase() === sourceStation &&
+        train.destination.toLowerCase() === destinationStation &&
+        train.date === travelDate
+    );
+
+    // Display results
+    const searchResultsDiv = document.getElementById('searchResults');
+    searchResultsDiv.innerHTML = ""; // Clear previous results
+
+    if (results.length > 0) {
+        results.forEach(train => {
+            const trainInfo = `
+                <div class="train-result" style="border-bottom: 1px solid #ddd; padding: 10px;">
+                    <p><strong>Train Number:</strong> ${train.number}</p>
+                    <p><strong>Train Name:</strong> ${train.name}</p>
+                    <p><strong>Source:</strong> ${train.source}</p>
+                    <p><strong>Destination:</strong> ${train.destination}</p>
+                    <p><strong>Date:</strong> ${train.date}</p>
+                    <p><strong>Time:</strong> ${train.time}</p>
+                </div>
+            `;
+            searchResultsDiv.innerHTML += trainInfo;
+        });
+    } else {
+        searchResultsDiv.innerHTML = "<p>No trains found matching your search criteria.</p>";
+    }
+}
+
+
         // Initialize variables for tracking login attempts
         let loginAttempts = 0;
         const maxAttempts = 3;
@@ -189,25 +236,27 @@
         </form>
     </section>
 
-    <!-- Search Trains Section -->
-    <section id="search" class="container mt-5" style="display: none;">
-        <h2>Search Train Details</h2>
-        <form class="mt-4">
-            <div class="form-group">
-                <label for="fromStation">From Station:</label>
-                <input type="text" class="form-control" id="fromStation" placeholder="Enter from station" required>
-            </div>
-            <div class="form-group">
-                <label for="toStation">To Station:</label>
-                <input type="text" class="form-control" id="toStation" placeholder="Enter to station" required>
-            </div>
-            <div class="form-group">
-                <label for="journeyDate">Date of Journey:</label>
-                <input type="date" class="form-control" id="journeyDate" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-    </section>
+    <!-- Search Section -->
+<section id="search" class="container mt-5">
+    <h2 class="text-center">Train Search</h2>
+    <form class="mt-4" onsubmit="handleTrainSearch(event)">
+        <div class="form-group">
+            <label for="sourceStation">Source Station:</label>
+            <input type="text" class="form-control" id="sourceStation" placeholder="Enter source station" required>
+        </div>
+        <div class="form-group">
+            <label for="destinationStation">Destination Station:</label>
+            <input type="text" class="form-control" id="destinationStation" placeholder="Enter destination station" required>
+        </div>
+        <div class="form-group">
+            <label for="travelDate">Date:</label>
+            <input type="date" class="form-control" id="travelDate" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Search Trains</button>
+    </form>
+    <div id="searchResults" class="mt-4"></div> <!-- Container for search results -->
+</section>
+
 
     <!-- Contact Us Section -->
     <section id="contact" class="container mt-5" style="display: none;">
